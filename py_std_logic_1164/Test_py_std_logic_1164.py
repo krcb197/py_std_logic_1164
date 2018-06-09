@@ -13,11 +13,8 @@ class test_std_logic(unittest.TestCase):
 
     def test_int_create(self):
 
-        temp1 = std_logic(1)
-        temp0 = std_logic(0)
-
-        self.assertEqual('%s'%temp0,'0')
-        self.assertEqual('%s'%temp1,'1')
+        self.assertEqual('%s'%std_logic(0),'0')
+        self.assertEqual('%s'%std_logic(1),'1')
 
         with self.assertRaises(ValueError):
             temp = std_logic(2)
@@ -35,6 +32,11 @@ class test_std_logic(unittest.TestCase):
             temp = std_logic('ZZ')
 
             temp = std_logic('00')
+
+    def test_boolean_create(self):
+
+        self.assertEqual('%s'%std_logic(False),'0')
+        self.assertEqual('%s'%std_logic(True),'1')
 
     def test_bitwise_and(self):
 

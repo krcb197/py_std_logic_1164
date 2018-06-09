@@ -1,30 +1,55 @@
 
 
 class std_logic():
+    """
+    class to represent a digital bit allowing for the same 9 values of a bit supported by IEEE 1164.
+        'U' - Unitialized
+        'X' - Unknown
+        '0' - Strong 0
+        '1' - Strong 1
+        'Z' - High Impedance
+        'W' - Weak unknown logic
+        'L' - Weak logic 0
+        'H' - Weak logic 1
+        '-' - Don't care
 
+    Refer to https://en.wikipedia.org/wiki/IEEE_1164 for more details
+    """
     def __init__(self,initialvalue='U'):
+        """
 
+        :param initialvalue: can be an string or int
+        """
         if isinstance(initialvalue,str):
             if len(initialvalue) != 1:
                 raise ValueError('length is not 1')
 
-            if ((initialvalue == 'U') or \
-                (initialvalue == 'X') or \
-                (initialvalue == '0') or \
-                (initialvalue == '1') or \
-                (initialvalue == 'Z') or \
-                (initialvalue == 'W') or \
-                (initialvalue == 'L') or \
-                (initialvalue == 'H') or \
+            if ((initialvalue == 'U') or
+                (initialvalue == 'X') or
+                (initialvalue == '0') or
+                (initialvalue == '1') or
+                (initialvalue == 'Z') or
+                (initialvalue == 'W') or
+                (initialvalue == 'L') or
+                (initialvalue == 'H') or
                 (initialvalue == '-')):
 
                 self._value = initialvalue
             else:
                 raise ValueError('Unsupported value, only U,X,0,1,Z,W,L,H or - is permitted')
 
+        elif isinstance(initialvalue,bool):
+            if initialvalue is False:
+                self._value = '0'
+            elif initialvalue is True:
+                self._value = '1'
+            else:
+                raise ValueError('Illegal boolean value')
+
         elif isinstance(initialvalue,int):
             if (initialvalue == 0) or (initialvalue == 1):
                 self._value = str(initialvalue)
+                assert (self._value == '1') or (self._value == '0')
             else:
                 raise ValueError('Unsupported integer value, only 0 or 1 is permitted')
         else:
