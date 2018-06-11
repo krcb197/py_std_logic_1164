@@ -1,5 +1,5 @@
 from .std_logic import std_logic
-from .std_logic_vector import std_logic_vector
+from .std_logic_vector import std_logic_vector,full,ones,zeros
 
 import unittest
 
@@ -199,8 +199,14 @@ class test_std_logic_vector(unittest.TestCase):
         b = std_logic_vector('001')
         with self.assertRaises(TypeError):
             c = a + b
+
+        with self.assertRaises(TypeError):
             c = a - b
+
+        with self.assertRaises(TypeError):
             c = a / b
+
+        with self.assertRaises(TypeError):
             c = a * b
 
     def test_derived_classes(self):
@@ -243,6 +249,10 @@ class test_std_logic_vector(unittest.TestCase):
 
         self.assertEqual(temp == int(0), False)
 
+    def test_initialisation_methods(self):
+        self.assertEqual(full(10,std_logic('Z')), std_logic_vector('ZZZZZZZZZZ'))
+        self.assertEqual(ones(4), std_logic_vector('1111'))
+        self.assertEqual(zeros(3), std_logic_vector('000'))
 
 if __name__ == '__main__':
     unittest.main()

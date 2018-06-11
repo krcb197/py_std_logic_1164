@@ -1,5 +1,27 @@
 from .std_logic import std_logic
 
+def full(vector_length,initial_value=std_logic('U')):
+
+    if not isinstance(vector_length,int):
+        raise TypeError('vector_length must be of type integer')
+    else:
+        if vector_length <= 0:
+            raise ValueError('vector_length must be more than 0')
+        else:
+            init_list = []
+            for i in range(vector_length):
+                init_list.append(initial_value)
+
+            return_item = std_logic_vector(init_list)
+
+    return return_item
+
+def ones(vector_length):
+    return full(vector_length=vector_length,initial_value=std_logic('1'))
+
+def zeros(vector_length):
+    return full(vector_length=vector_length,initial_value=std_logic('0'))
+
 class std_logic_vector():
     """
     class to represent a digital vector in a similar fashion to the IEEE 1164, std_logic_vector
@@ -207,7 +229,7 @@ class std_logic_vector():
                 raise ValueError('Number of bits to extend by must be greater than zero')
             else:
                 for item_count in range(number_of_bits):
-                    self._value.insert(0,insertion_value)
+                    self._value.append(insertion_value)
 
 
     def shortenMSB(self,number_of_bits):
