@@ -4,12 +4,19 @@ from .std_logic_vector import std_logic_vector
 import unittest
 
 class test_std_logic(unittest.TestCase):
+    """
+    Tests for the std_logic class
+    """
 
     def test_unitialised_create(self):
+        """
+        Check that the unitialized value of the object is 'U'
+        :return:
+        """
 
         temp = std_logic()
 
-        self.assertEqual('%s'%temp,'U')
+        self.assertEqual('%s'%temp, 'U')
 
     def test_int_create(self):
 
@@ -41,26 +48,26 @@ class test_std_logic(unittest.TestCase):
     def test_bitwise_and(self):
 
         # bitwise and
-        self.assertEqual(std_logic(0) & std_logic(0),std_logic(0))
-        self.assertEqual(std_logic(0) & std_logic(1),std_logic(0))
-        self.assertEqual(std_logic(1) & std_logic(0),std_logic(0))
-        self.assertEqual(std_logic(1) & std_logic(1),std_logic(1))
+        self.assertEqual(std_logic(0) & std_logic(0), std_logic(0))
+        self.assertEqual(std_logic(0) & std_logic(1), std_logic(0))
+        self.assertEqual(std_logic(1) & std_logic(0), std_logic(0))
+        self.assertEqual(std_logic(1) & std_logic(1), std_logic(1))
 
         # bitwise or
-        self.assertEqual(std_logic(0) | std_logic(0),std_logic(0))
-        self.assertEqual(std_logic(0) | std_logic(1),std_logic(1))
-        self.assertEqual(std_logic(1) | std_logic(0),std_logic(1))
-        self.assertEqual(std_logic(1) | std_logic(1),std_logic(1))
+        self.assertEqual(std_logic(0) | std_logic(0), std_logic(0))
+        self.assertEqual(std_logic(0) | std_logic(1), std_logic(1))
+        self.assertEqual(std_logic(1) | std_logic(0), std_logic(1))
+        self.assertEqual(std_logic(1) | std_logic(1), std_logic(1))
 
         # bitwise xor
-        self.assertEqual(std_logic(0) ^ std_logic(0),std_logic(0))
-        self.assertEqual(std_logic(0) ^ std_logic(1),std_logic(1))
-        self.assertEqual(std_logic(1) ^ std_logic(0),std_logic(1))
-        self.assertEqual(std_logic(1) ^ std_logic(1),std_logic(0))
+        self.assertEqual(std_logic(0) ^ std_logic(0), std_logic(0))
+        self.assertEqual(std_logic(0) ^ std_logic(1), std_logic(1))
+        self.assertEqual(std_logic(1) ^ std_logic(0), std_logic(1))
+        self.assertEqual(std_logic(1) ^ std_logic(1), std_logic(0))
 
         # bitwise not
-        self.assertEqual(~std_logic(1),std_logic(0))
-        self.assertEqual(~std_logic('Z'),std_logic('X'))
+        self.assertEqual(~std_logic(1), std_logic(0))
+        self.assertEqual(~std_logic('Z'), std_logic('X'))
 
     def test_derived_class_operations(self):
 
@@ -74,49 +81,63 @@ class test_std_logic(unittest.TestCase):
         temp1 = type1_std_logic(0)
         temp2 = type2_std_logic(0)
 
-        self.assertEqual(temp == temp1,True)
-        self.assertEqual(temp2 == temp1,True)
-        self.assertEqual(temp1 == temp2,True)
-        self.assertEqual(temp2 == temp,True)
+        self.assertEqual(temp == temp1, True)
+        self.assertEqual(temp2 == temp1, True)
+        self.assertEqual(temp1 == temp2, True)
+        self.assertEqual(temp2 == temp, True)
 
-        self.assertEqual(temp & temp1,std_logic(0))
-        self.assertEqual(temp2 & temp1,std_logic(0))
-        self.assertEqual(temp1 & temp2,std_logic(0))
-        self.assertEqual(temp2 & temp,std_logic(0))
+        self.assertEqual(temp & temp1, std_logic(0))
+        self.assertEqual(temp2 & temp1, std_logic(0))
+        self.assertEqual(temp1 & temp2, std_logic(0))
+        self.assertEqual(temp2 & temp, std_logic(0))
 
-        self.assertEqual(temp | temp1,std_logic(0))
-        self.assertEqual(temp2 | temp1,std_logic(0))
-        self.assertEqual(temp1 | temp2,std_logic(0))
-        self.assertEqual(temp2 | temp,std_logic(0))
+        self.assertEqual(temp | temp1, std_logic(0))
+        self.assertEqual(temp2 | temp1, std_logic(0))
+        self.assertEqual(temp1 | temp2, std_logic(0))
+        self.assertEqual(temp2 | temp, std_logic(0))
 
-        self.assertEqual(temp ^ temp1,std_logic(0))
-        self.assertEqual(temp2 ^ temp1,std_logic(0))
-        self.assertEqual(temp1 ^ temp2,std_logic(0))
-        self.assertEqual(temp2 ^ temp,std_logic(0))
+        self.assertEqual(temp ^ temp1, std_logic(0))
+        self.assertEqual(temp2 ^ temp1, std_logic(0))
+        self.assertEqual(temp1 ^ temp2, std_logic(0))
+        self.assertEqual(temp2 ^ temp, std_logic(0))
 
         with self.assertRaises(TypeError):
-            self.assertEqual(temp & int(0),std_logic(0))
-            self.assertEqual(temp | int(0),std_logic(0))
-            self.assertEqual(temp ^ int(0),std_logic(0))
+            self.assertEqual(temp & int(0), std_logic(0))
+            self.assertEqual(temp | int(0), std_logic(0))
+            self.assertEqual(temp ^ int(0), std_logic(0))
 
 
 class test_std_logic_vector(unittest.TestCase):
 
     def test_initialisation(self):
-        self.assertEqual('%s'%std_logic_vector('000'),'000')
-        self.assertEqual('%s'%std_logic_vector(5),'101')
-        self.assertEqual('%s'%std_logic_vector([std_logic(1),std_logic(0)]),'10')
+
+        temp = []
+        temp = [None,None]
+        temp[0] = std_logic('0')
+        temp[1] = std_logic('1')
+
+        self.assertEqual('%s'%std_logic_vector('000'), '000')
+        self.assertEqual('%s'%std_logic_vector(5), '101')
+        self.assertEqual('%s'%std_logic_vector(temp), '10')
+
+        with self.assertRaises(TypeError):
+            a = std_logic_vector(5.0)
+
+        with self.assertRaises(ValueError):
+            a = std_logic_vector('1J0')
 
     def test_getting_sections(self):
 
         temp = std_logic_vector('01Z')
 
-        self.assertEqual(temp[0],std_logic(0))
-        self.assertEqual(temp[-1],std_logic('Z'))
-        self.assertEqual(temp[1:],std_logic_vector('1Z'))
+        self.assertEqual(temp[0], std_logic('Z'))
+        self.assertEqual(temp[-1], std_logic('0'))
+        self.assertEqual(temp[1:], std_logic_vector('01'))
 
         with self.assertRaises(IndexError):
             more_temp = temp[3]
+
+        with self.assertRaises(IndexError):
             more_temp = temp[-4]
 
     def test_setting_sections(self):
@@ -124,35 +145,38 @@ class test_std_logic_vector(unittest.TestCase):
         temp = std_logic_vector('01Z')
 
         temp[0] = std_logic(1)
-        self.assertEqual(temp,std_logic_vector('11Z'))
+        self.assertEqual(temp, std_logic_vector('011'))
 
         temp[-1] = std_logic(1)
-        self.assertEqual(temp,std_logic_vector('111'))
+        self.assertEqual(temp, std_logic_vector('111'))
 
         temp[:2] = std_logic_vector('00')
-        self.assertEqual(temp,std_logic_vector('001'))
+        self.assertEqual(temp, std_logic_vector('100'))
 
         temp = std_logic_vector('00000')
-        temp[1:4] = std_logic_vector('111')
-        self.assertEqual(temp,std_logic_vector('01110'))
+        temp[1:4] = std_logic_vector('U11')
+        self.assertEqual(temp,std_logic_vector('0U110'))
 
     def test_iteration(self):
         temp = ''
         for item in std_logic_vector('10Z'):
             temp += '%s'%item
 
-        self.assertEqual(temp,'10Z')
+        self.assertEqual(temp,'Z01')
 
     def test_printable_forms(self):
 
         temp = std_logic_vector('10101')
 
-        self.assertEqual('%s'%temp,'10101')
-        self.assertEqual('%d'%temp,'21')
-        self.assertEqual('%X'%temp,'15')
+        self.assertEqual('%s'%temp, '10101')
+        self.assertEqual('%d'%temp, '21')
+        self.assertEqual('%X'%temp, '15')
 
-        self.assertEqual(hex(temp),'0x15')
-        self.assertEqual(bin(temp),'0b10101')
+        self.assertEqual(hex(temp), '0x15')
+        self.assertEqual(bin(temp), '0b10101')
+
+        with self.assertRaises(ValueError):
+            temp_report = '%d'%std_logic_vector('1Z0')
 
     def test_bitwise_operators(self):
 
@@ -162,10 +186,62 @@ class test_std_logic_vector(unittest.TestCase):
 
         self.assertEqual(~temp1,std_logic_vector('01010'))
 
-        self.assertEqual(temp1 | temp2,std_logic_vector('11101'))
-        self.assertEqual(temp1 & temp2,std_logic_vector('00101'))
-        self.assertEqual(temp1 ^ temp2,std_logic_vector('11000'))
+        self.assertEqual(temp1 | temp2, std_logic_vector('11101'))
+        self.assertEqual(temp1 & temp2, std_logic_vector('00101'))
+        self.assertEqual(temp1 ^ temp2, std_logic_vector('11000'))
 
+    def test_numeric_operators_unimplemented(self):
+        """
+        The std_logic_vector should not implement any of the following, instead the classes in
+        :return:
+        """
+        a = std_logic_vector('101')
+        b = std_logic_vector('001')
+        with self.assertRaises(TypeError):
+            c = a + b
+            c = a - b
+            c = a / b
+            c = a * b
+
+    def test_derived_classes(self):
+        class type1_std_logic_vector(std_logic_vector):
+            pass
+
+        class type2_std_logic_vector(std_logic_vector):
+            pass
+
+        temp = std_logic_vector('01')
+        temp1 = type1_std_logic_vector('01')
+        temp2 = type2_std_logic_vector('01')
+
+        self.assertEqual(temp == temp1, True)
+        self.assertEqual(temp2 == temp1, True)
+        self.assertEqual(temp1 == temp2, True)
+        self.assertEqual(temp2 == temp, True)
+
+        self.assertEqual(temp & temp1, temp)
+        self.assertEqual(temp2 & temp1, temp)
+        self.assertEqual(temp1 & temp2, temp)
+        self.assertEqual(temp2 & temp, temp)
+
+        self.assertEqual(temp | temp1, temp)
+        self.assertEqual(temp2 | temp1, temp)
+        self.assertEqual(temp1 | temp2, temp)
+        self.assertEqual(temp2 | temp, temp)
+
+        self.assertEqual(temp ^ temp1, std_logic_vector('00'))
+        self.assertEqual(temp2 ^ temp1, std_logic_vector('00'))
+        self.assertEqual(temp1 ^ temp2, std_logic_vector('00'))
+        self.assertEqual(temp2 ^ temp, std_logic_vector('00'))
+
+        with self.assertRaises(TypeError):
+            self.assertEqual(temp & int(0), temp)
+        with self.assertRaises(TypeError):
+            self.assertEqual(temp | int(0), temp)
+        with self.assertRaises(TypeError):
+            self.assertEqual(temp ^ int(0), temp)
+
+        self.assertEqual(temp == int(0), False)
 
 
 if __name__ == '__main__':

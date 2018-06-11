@@ -1,8 +1,15 @@
 from .std_logic import std_logic
 
 class std_logic_vector():
-
+    """
+    class to represent a digital vector in a similar fashion to the IEEE 1164, std_logic_vector
+    """
     def __init__(self,initialvalue=None):
+        """
+        Initialise the std_logic_vector
+        :param initialvalue: used to initialise the std_logic_vector with on creation
+        :type NoneType, int, str, list
+        """
 
         self._value = []
 
@@ -10,7 +17,7 @@ class std_logic_vector():
             self._value = []
         elif isinstance(initialvalue,str):
 
-            for element in initialvalue:
+            for element in initialvalue[::-1]:
                 self._value.append(std_logic(element))
 
         elif isinstance(initialvalue,int):
@@ -23,16 +30,31 @@ class std_logic_vector():
             #check every item is a py_std_logic_1164
             for listitem in initialvalue:
                 if not isinstance(listitem,std_logic):
-                    raise ValueError('only lists of py_std_logic_1164 are permitted')
+                    raise TypeError('only lists of py_std_logic_1164 are permitted')
 
                 self._value.append(listitem)
 
 
         else:
-            raise(ValueError('Unsupported type on setup'))
+            raise(TypeError('Unsupported type on setup'))
 
     def __int__(self):
-        return int(self.__str__(),2)
+        if  (std_logic('U') in self._value) or \
+            (std_logic('X') in self._value) or \
+            (std_logic('W') in self._value) or \
+            (std_logic('Z') in self._value) or \
+            (std_logic('-') in self._value):
+            raise ValueError('unable to convert to integer when std_logic_vector contains U,X,W,Z or -')
+        else:
+            return int(self.__str__(),2)
+
+    @property
+    def value(self):
+        """
+        returns the internal value of the object as a copy
+        :return: list of std_logic
+        """
+        return self._value.copy()
 
     def __index__(self):
         return self.__int__()
@@ -40,7 +62,7 @@ class std_logic_vector():
 
     def __str__(self):
         return_value = ''
-        for element in self._value:
+        for element in self._value[::-1]:
             return_value += '%s'%element
 
         return return_value
@@ -54,11 +76,13 @@ class std_logic_vector():
 
     def __eq__(self, other):
 
-        if isinstance(other,self.__class__):
+        if issubclass(other.__class__,std_logic_vector):
             return_value = (self._value == other._value)
         else:
             try:
-                return_value = (self._value == std_logic_vector(other))
+                return_value = (self._value == std_logic_vector(other)._value)
+            except TypeError:
+                return_value = False
             except ValueError:
                 return_value = False
 
@@ -115,42 +139,79 @@ class std_logic_vector():
 
     def __or__(self,other):
 
-        #TODO check the type of other
+        if issubclass(other.__class__,std_logic_vector):
 
-        if len(other) != len(self):
-            raise ValueError('bitwise or can only be perfromed on two std_logic_vectors of the same length')
+            if len(other) != len(self):
+                raise ValueError('bitwise or can only be perfromed on two std_logic_vectors of the same length')
+            else:
+                temp = self._value.copy()
+                for temp_index in range(len(temp)):
+                    temp[temp_index] = temp[temp_index] | other[temp_index]
+
+            return std_logic_vector(temp)
         else:
-            temp = self._value.copy()
-            for temp_index in range(len(temp)):
-                temp[temp_index] = temp[temp_index] | other[temp_index]
+            raise TypeError()
+            return NotImplemented
 
-        return std_logic_vector(temp)
 
     def __and__(self,other):
 
-        #TODO check the type of other
+        if issubclass(other.__class__,std_logic_vector):
 
-        if len(other) != len(self):
-            raise ValueError('bitwise and can only be perfromed on two std_logic_vectors of the same length')
+            if len(other) != len(self):
+                raise ValueError('bitwise and can only be performed on two std_logic_vectors of the same length')
+            else:
+                temp = self._value.copy()
+                for temp_index in range(len(temp)):
+                    temp[temp_index] = temp[temp_index] & other[temp_index]
+
+            return std_logic_vector(temp)
         else:
-            temp = self._value.copy()
-            for temp_index in range(len(temp)):
-                temp[temp_index] = temp[temp_index] & other[temp_index]
-
-        return std_logic_vector(temp)
+            raise TypeError()
+            return NotImplemented
 
     def __xor__(self,other):
 
-        #TODO check the type of other
+        if issubclass(other.__class__,std_logic_vector):
 
-        if len(other) != len(self):
-            raise ValueError('bitwise and can only be perfromed on two std_logic_vectors of the same length')
+            if len(other) != len(self):
+                raise ValueError('bitwise and can only be perfromed on two std_logic_vectors of the same length')
+            else:
+                temp = self._value.copy()
+                for temp_index in range(len(temp)):
+                    temp[temp_index] = temp[temp_index] ^ other[temp_index]
+
+            return std_logic_vector(temp)
         else:
-            temp = self._value.copy()
-            for temp_index in range(len(temp)):
-                temp[temp_index] = temp[temp_index] ^ other[temp_index]
+            raise TypeError()
+            return NotImplemented
 
-        return std_logic_vector(temp)
+    def __lshift__(self,other):
+        pass
+
+    def __rshift__(self,other):
+        pass
+
+    def extendMSB(self,number_of_bits,insertion_value=std_logic('U')):
+        """
+        in place operator to extend the number of bits in the vector, bits are added to the most significant end
+        :param number_of_bits: number of bits to extend by
+        :type number_of_bits int
+        :param insertion_value: std_logic or 1 character string with a valid character that can be converted to a std_logic
+        :return:
+        """
+        if not isinstance(number_of_bits,int):
+            raise TypeError('number_of_bits must be an integer')
+        else:
+            if number_of_bits <= 0:
+                raise ValueError('Number of bits to extend by must be greater than zero')
+            else:
+                for item_count in range(number_of_bits):
+                    self._value.insert(0,insertion_value)
+
+
+    def shortenMSB(self,number_of_bits):
+        pass
 
     def reverse(self):
         """
