@@ -1,5 +1,6 @@
 from .std_logic import std_logic
 from .std_logic_vector import std_logic_vector,full,ones,zeros
+from .numeric_std import signed,unsigned
 
 import unittest
 
@@ -253,6 +254,39 @@ class test_std_logic_vector(unittest.TestCase):
         self.assertEqual(full(10,std_logic('Z')), std_logic_vector('ZZZZZZZZZZ'))
         self.assertEqual(ones(4), std_logic_vector('1111'))
         self.assertEqual(zeros(3), std_logic_vector('000'))
+
+class test_numeric_std(unittest.TestCase):
+
+    def test_adding_operations(self):
+
+        a = unsigned(4,bit_length=3)
+        b = unsigned(3,bit_length=3)
+
+        self.assertEqual( (a + b).__int__(), 7)
+
+        # because the length of the vector is 3 then it should roll over and return 0, it will generate a runtime warning
+        with self.assertWarns(RuntimeWarning):
+            result = a + a
+        self.assertEqual( result.__int__(), 0)
+
+        # next we turn on addition saturation,
+        a.saturating_overflow = True
+        with self.assertWarns(RuntimeWarning):
+            result = a + a
+        self.assertEqual( result , ones(len(a), dtype=unsigned))
+
+        a.saturating_warnings = False
+        result = a + a
+        self.assertEqual( result , ones(len(a), dtype=unsigned))
+
+        result = a + 2
+        self.assertEqual(result.__int__(), 6)
+        self.assertEqual(a.__int__(), 4)
+
+
+        a += 2
+        self.assertEqual(a.__int__(), 6)
+
 
 if __name__ == '__main__':
     unittest.main()
