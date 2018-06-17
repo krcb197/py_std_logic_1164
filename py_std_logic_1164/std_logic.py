@@ -3,15 +3,20 @@
 class std_logic():
     """
     class to represent a digital bit allowing for the same 9 values of a bit supported by IEEE 1164.
-        'U' - Unitialized
-        'X' - Unknown
-        '0' - Strong 0
-        '1' - Strong 1
-        'Z' - High Impedance
-        'W' - Weak unknown logic
-        'L' - Weak logic 0
-        'H' - Weak logic 1
-        '-' - Don't care
+
+        ======  ===============
+        Value   Interpreatation
+        ------  ---------------
+        U       Unitialized
+        X       Unknown
+        0       Strong 0
+        1       Strong 1
+        Z       High Impedance
+        W       Weak unknown logic
+        L       Weak logic 0
+        H       Weak logic 1
+        -       Don't care
+        ======  ===============
 
     Refer to https://en.wikipedia.org/wiki/IEEE_1164 for more details
     """
@@ -223,8 +228,10 @@ class std_logic():
     def set(self,value):
         """
         in place value set
+
         :param value: value to be loaded into the bit
         :type value: int, bool, str
+
         """
         if isinstance(value,str):
             if len(value) != 1:

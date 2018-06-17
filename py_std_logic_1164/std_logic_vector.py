@@ -71,6 +71,7 @@ class std_logic_vector:
     def value(self):
         """
         returns the internal value of the object as a copy
+
         :return: list of std_logic
         """
         return self._value.copy()
@@ -240,10 +241,37 @@ class std_logic_vector:
         raise NotImplementedError
 
     def appendLSB(self, value):
-        raise NotImplementedError
+        """
+        append data on the most significant end of the vector
+
+        :param value: value to append
+        :type value:
+
+        :return:
+        """
+        if issubclass(value.__class__, std_logic_vector):
+            self._value = value._value + self._value
+        elif isinstance(value, std_logic):
+            self._value.insert(0,value)
+        else:
+            self.appendLSB(std_logic(value))
 
     def appendMSB(self, value):
-        raise NotImplementedError
+        """
+        append data on the most significant end of the vector
+
+        :param value: value to append
+        :type value:
+
+        :return:
+        """
+        if issubclass(value.__class__, std_logic_vector):
+            self._value += value._value
+        elif isinstance(value, std_logic):
+            self._value.append(value)
+        else:
+            self.appendMSB(std_logic(value))
+
 
     def set_ones(self):
         """
@@ -263,6 +291,7 @@ class std_logic_vector:
 def full(vector_length, initial_value=std_logic('U'),dtype=std_logic_vector):
     """
     create a new std_logic_vector (or derived class) with all bits initialised to the same value
+
     :param vector_length: length of the new vector
     :type vector_length: int
     :param initial_value:
@@ -294,6 +323,16 @@ def full(vector_length, initial_value=std_logic('U'),dtype=std_logic_vector):
 
 
 def ones(vector_length,dtype=std_logic_vector):
+    """
+    create a new std_logic_vector (or derived class) with all bits initialised to the same value
+
+
+    :param vector_length: number of bits in the vector
+    :type vector_length: int
+    :param dtype: type of the object to be created
+
+    :return: new object
+    """
     return full(vector_length=vector_length, initial_value=std_logic('1'),dtype=dtype)
 
 
